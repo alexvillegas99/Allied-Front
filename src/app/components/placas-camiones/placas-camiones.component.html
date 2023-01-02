@@ -34,10 +34,20 @@
                   >
                     <i class="fa fa-edit"></i>
                   </button>
-                  <button class="btn btn-danger btn-fill"
-                  (click)="eliminarPlacaCamion(placa.id)">
-                    <i class="fa fa-trash"></i>
-                  </button>
+                  <button
+                  *ngIf="placa.estado"
+                  (click)="cambiarEstado(placa.id, placa.estado)"
+                  class="btn btn-primary btn-fill"
+                >
+                  <i class="fa fa-check"></i>
+                </button>
+                <button
+                  *ngIf="!placa.estado"
+                  (click)="cambiarEstado(placa.id, placa.estado)"
+                  class="btn btn-danger btn-fill"
+                >
+                  <i class="fa fa-ban"></i>
+                </button>
                 </td>
               </tr>
               <tr *ngIf="placasCamiones.length === 0">

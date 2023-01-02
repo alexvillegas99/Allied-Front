@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NgbModal, NgbModalConfig, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { LugarObservacion } from 'app/models/lugar-observacion.interface';
+import { LugarObservacionService } from 'app/services/lugar-observacion.service';
 import { NotificacionService } from 'app/services/notificacion.service';
 import Swal from 'sweetalert2';
 
@@ -22,7 +23,8 @@ export class LugarObservacionComponent implements OnInit {
     private config: NgbModalConfig,
     private _modalService: NgbModal,
     private fb: FormBuilder,
-    private _notificacion: NotificacionService
+    private _notificacion: NotificacionService,
+    private _lugarObservacionService:LugarObservacionService
   ) {
     config.backdrop = "static";
     config.keyboard = false;
@@ -36,16 +38,9 @@ export class LugarObservacionComponent implements OnInit {
     this.getLugarObervacion();
   }
   getLugarObervacion() {
-    this.lugaresObservacion = [
-      {
-        id: 1,
-        nombre: "Tanques de sepe",
-      },
-      {
-        id: 2,
-        nombre: "Puerto",
-      },
-    ];
+   this._lugarObservacionService.Get().subscribe(res=>{
+    this.lugaresObservacion=res;
+   })
   }
 
   open(content, placa?: LugarObservacion): void {
@@ -69,23 +64,62 @@ export class LugarObservacionComponent implements OnInit {
     this.lugarObservacionSeleccionado = undefined;
   }
 
-  async eliminarLugarObservacion(id: number) {
-    
+  async cambiarEstado(id: number,estado:boolean) {
     Swal.fire({
-      title:  "Eliminar lugar de la observación ? ",
+      title:   !estado ? "Habilitar lugar observación?" : "Deshabilitar  lugar observación?",
       showCancelButton: true,
       confirmButtonText: "Aceptar",
     }).then((result) => {
       if (result.isConfirmed) {
-       
+       this._lugarObservacionService.Edit(id,{estado:!estado}).subscribe((result)=>{
+        this._notificacion.showNotification('El lugar de la observación ah sido actualizado','success');
+        this.getLugarObervacion();
+       })
       }
     });
   }
   guardarLugarObservacion() {
     if (this.lugarObservacionSeleccionado === undefined) {
-      
+      this._lugarObservacionService
+        .Save(this.lugarObservacionForm.value)
+        .subscribe(
+          (result) => {
+            if (result.message === "Ok") {
+              this._notificacion.showNotification(
+                "El lugar de la observación a sido agregado correctamente",
+                "success"
+              );
+              this.cerrarModal();
+              this.getLugarObervacion();
+              return;
+            }
+          },
+          (err) => {
+            this._notificacion.mensajeError(err);
+          }
+        );
     } else {
-     
+      this._lugarObservacionService
+        .Edit(
+          this.lugarObservacionSeleccionado.id,
+          this.lugarObservacionForm.value
+        )
+        .subscribe(
+          (result) => {
+            if (result.message === "Ok") {
+              this._notificacion.showNotification(
+                "El lugar de la observación a sido actualizada¡o correctamente",
+                "success"
+              );
+              this.cerrarModal();
+              this.getLugarObervacion();
+              return;
+            }
+          },
+          (err) => {
+            this._notificacion.mensajeError(err);
+          }
+        );
     }
   }
 

@@ -8,18 +8,14 @@
         <div class="row">
           <div class="col-md-4">
             <label>Tipo de formulario</label>
-            <select class="form-select" aria-label="Default select example" [(ngModel)]="nuevoFormulario.tipo_formulario">
-              <option selected>Seleccione...</option>
-              <option>Abierto</option>
-              <option>Cerrado</option>
+            <select class="form-select" aria-label="Default select example" (change)="imprimir()" [(ngModel)]="nuevoFormulario.tipo_formulario">
+              <option *ngFor="let tipoFormulario of tipoFormularios" [value]="tipoFormulario.id">{{tipoFormulario.tipo}}</option>
             </select>
           </div>
           <div class="col-md-4">
             <label>Proceso</label>
             <select class="form-select" aria-label="Default select example" [(ngModel)]="nuevoFormulario.proceso">
-              <option selected>Seleccione...</option>
-              <option>Mantenimiento</option>
-              <option>Regado</option>
+              <option *ngFor="let proceso of procesos" [value]="proceso.id"  >{{proceso.nombre}}</option>
             </select>
           </div>
           <div class="col-md-4">
@@ -37,10 +33,7 @@
           <div class="col-md-4">
             <label>Grupo de preguntas</label>
             <select class="form-select" aria-label="Default select example" [(ngModel)]="grupoPregunta" >
-              <option selected>Seleccione...</option>
-              <option>LUGAR DE TRABAJO</option>
-              <option>PROCEDIMIENTO</option>
-              <option>EQUIPOS</option>
+              <option *ngFor="let grupo of grupoPreguntas" >{{grupo.nombre}}</option>
             </select>
           </div>
           <div class="col-md-3">

@@ -3,6 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { NgbModal, NgbModalConfig, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Proceso } from 'app/models/proceso.interface';
 import { NotificacionService } from 'app/services/notificacion.service';
+import { ProcesosService } from 'app/services/procesos.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -20,7 +21,8 @@ export class ProcesosComponent implements OnInit {
     private config: NgbModalConfig,
     private _modalService: NgbModal,
     private fb: FormBuilder,
-    private _notificacion: NotificacionService
+    private _notificacion: NotificacionService,
+    private _procesosService:ProcesosService
   ) {
     config.backdrop = "static";
     config.keyboard = false;
@@ -31,19 +33,12 @@ export class ProcesosComponent implements OnInit {
   encabezados: string[] = ["#", "Proceso"];
 
   ngOnInit(): void {
-    this.getTipoFormulario();
+    this.getProcesos();
   }
-  getTipoFormulario() {
-    this.procesos = [
-      {
-        id: 1,
-        nombre: "Supervición",
-      },
-      {
-        id: 2,
-        nombre: "Revisión",
-      },
-    ];
+  getProcesos() {
+   this._procesosService.Get().subscribe(res=>{
+    this.procesos=res;
+   })
   }
 
   open(content, proceso?: Proceso): void {
@@ -67,23 +62,64 @@ export class ProcesosComponent implements OnInit {
     this.procesoSeleccionado = undefined;
   }
 
-  async eliminarProceso(id: number) {
+  async cambiarEstado(id: number,estado:boolean) {
     
     Swal.fire({
-      title:  "Eliminar proceso ? ",
+      title:   !estado ? "Habilitar Proceso?" : "Deshabilitar  Proceso?",
       showCancelButton: true,
       confirmButtonText: "Aceptar",
     }).then((result) => {
       if (result.isConfirmed) {
-       
+       this._procesosService.Edit(id,{estado:!estado}).subscribe((result)=>{
+        this._notificacion.showNotification('El proceso ah sido actualizado','success');
+        this.getProcesos();
+       })
       }
     });
   }
   guardarProceso() {
+    
     if (this.procesoSeleccionado === undefined) {
-      
+      this._procesosService
+        .Save(this.procesoForm.value)
+        .subscribe(
+          (result) => {
+            if (result.message === "Ok") {
+              this._notificacion.showNotification(
+                "El proceso a sido agregado correctamente",
+                "success"
+              );
+              this.cerrarModal();
+              this.getProcesos();
+              return;
+            }
+          },
+          (err) => {
+            this._notificacion.mensajeError(err);
+          }
+        );
     } else {
-     
+      this._procesosService
+        .Edit(
+          this.procesoSeleccionado.id,
+          this.procesoForm.value
+        )
+        .subscribe(
+          (result) => {
+            if (result.message === "Ok") {
+              this._notificacion.showNotification(
+                "El proceso a sido actualizado correctamente",
+                "success"
+              );
+              this.cerrarModal();
+              this.getProcesos();
+              return;
+            }
+          },
+          (err) => {
+            this._notificacion.mensajeError(err);
+          }
+        );
     }
   }
 }

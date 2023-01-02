@@ -34,10 +34,20 @@
                   >
                     <i class="fa fa-edit"></i>
                   </button>
-                  <button class="btn btn-danger btn-fill"
-                  (click)="eliminarGrupoPreguntas(lugar.id)">
-                    <i class="fa fa-trash"></i>
-                  </button>
+                  <button
+                  *ngIf="grupo.estado"
+                  (click)="cambiarEstado(grupo.id, grupo.estado)"
+                  class="btn btn-primary btn-fill"
+                >
+                  <i class="fa fa-check"></i>
+                </button>
+                <button
+                  *ngIf="!grupo.estado"
+                  (click)="cambiarEstado(grupo.id, grupo.estado)"
+                  class="btn btn-danger btn-fill"
+                >
+                  <i class="fa fa-ban"></i>
+                </button>
                 </td>
               </tr>
               <tr *ngIf="gruposPreguntas.length === 0">

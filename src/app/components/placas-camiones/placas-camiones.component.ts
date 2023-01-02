@@ -3,6 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { NgbModal, NgbModalConfig, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { PlacaCamion } from 'app/models/placa-camion.interface';
 import { NotificacionService } from 'app/services/notificacion.service';
+import { PlacasCamionesService } from 'app/services/placas-camiones.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -21,7 +22,8 @@ export class PlacasCamionesComponent implements OnInit {
     private config: NgbModalConfig,
     private _modalService: NgbModal,
     private fb: FormBuilder,
-    private _notificacion: NotificacionService
+    private _notificacion: NotificacionService,
+    private _placasService:PlacasCamionesService
   ) {
     config.backdrop = "static";
     config.keyboard = false;
@@ -32,19 +34,12 @@ export class PlacasCamionesComponent implements OnInit {
   encabezados: string[] = ["#", "Placa camion"];
 
   ngOnInit(): void {
-    this.getTipoFormulario();
+    this.getTipoPlaca();
   }
-  getTipoFormulario() {
-    this.placasCamiones = [
-      {
-        id: 1,
-        nombre: "TBA-123",
-      },
-      {
-        id: 2,
-        nombre: "HBA-312",
-      },
-    ];
+  getTipoPlaca() {
+    this._placasService.Get().subscribe(res=>{
+      this.placasCamiones=res;
+    })
   }
 
   open(content, placa?: PlacaCamion): void {
@@ -67,24 +62,63 @@ export class PlacasCamionesComponent implements OnInit {
     this.placasCamionesForm.reset();
     this.placaCamionSeleccionado = undefined;
   }
-
-  async eliminarPlacaCamion(id: number) {
-    
+  async cambiarEstado(id: number,estado:boolean) {
     Swal.fire({
-      title:  "Eliminar placa ? ",
+      title:   !estado ? "Habilitar Placa?" : "Deshabilitar  Placa?",
       showCancelButton: true,
       confirmButtonText: "Aceptar",
     }).then((result) => {
       if (result.isConfirmed) {
-       
+       this._placasService.Edit(id,{estado:!estado}).subscribe((result)=>{
+        this._notificacion.showNotification('La placa ah sido actualizada','success');
+        this.getTipoPlaca();
+       })
       }
     });
   }
+  
   guardarPlacaCamion() {
     if (this.placaCamionSeleccionado === undefined) {
-      
+      this._placasService
+        .Save(this.placasCamionesForm.value)
+        .subscribe(
+          (result) => {
+            if (result.message === "Ok") {
+              this._notificacion.showNotification(
+                "La placa a sido agregada correctamente",
+                "success"
+              );
+              this.cerrarModal();
+              this.getTipoPlaca();
+              return;
+            }
+          },
+          (err) => {
+            this._notificacion.mensajeError(err);
+          }
+        );
     } else {
-     
-    }
+      this._placasService
+        .Edit(
+          this.placaCamionSeleccionado.id,
+          this.placasCamionesForm.value
+        )
+        .subscribe(
+          (result) => {
+            if (result.message === "Ok") {
+              this._notificacion.showNotification(
+                "La placa a sido actualizada correctamente",
+                "success"
+              );
+              this.cerrarModal();
+              this.getTipoPlaca();
+              return;
+            }
+          },
+          (err) => {
+            this._notificacion.mensajeError(err);
+          }
+        );
+    } 
   }
 }
