@@ -1,1 +1,142 @@
-<p>clima works!</p>
+<div class="main-content">
+    <div class="container-fluid">
+      <div class="card">
+        <div class="header">
+          <button
+            class="btn btn-primary btn-fill"
+            (click)="open(modalClima)"
+          >
+            <i class="fa fa-plus"></i> Agregar clima
+          </button>
+        </div>
+        <div class="content table-responsive table-full-width">
+          <table class="table table-hover" style="text-align: center">
+            <thead>
+              <tr>
+                <th *ngFor="let encabezado of encabezados">{{ encabezado }}</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="
+                  let clima of climas
+                    | slice : (page - 1) * pageSize : page * pageSize;
+                  let i = index
+                "
+              >
+                <td>{{ i + 1 }}</td>
+                <td>{{ clima.nombre }}</td>
+                <td>
+                  <button
+                    (click)="open(modalClima, clima)"
+                    class="btn btn-success btn-fill"
+                  >
+                    <i class="fa fa-edit"></i>
+                  </button>
+                  <button
+                *ngIf="clima.estado"
+                (click)="cambiarEstado(clima.id, clima.estado)"
+                class="btn btn-primary btn-fill"
+              >
+                <i class="fa fa-check"></i>
+              </button>
+              <button
+                *ngIf="!clima.estado"
+                (click)="cambiarEstado(clima.id, clima.estado)"
+                class="btn btn-danger btn-fill"
+              >
+                <i class="fa fa-ban"></i>
+              </button>
+                </td>
+              </tr>
+              <tr *ngIf="climas.length === 0">
+                <td colspan="10">
+                  <div
+                    class="table-responsive table-full-width"
+                    style="text-align: center"
+                  >
+                    <img src="./assets/img/no-documentos.png" alt="" />
+                    <br />
+                    <label>No se encontraron registros</label>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <ngb-pagination
+            [collectionSize]="climas.length"
+            [(page)]="page"
+            aria-label="Default pagination"
+          ></ngb-pagination>
+        </div>
+      </div>
+  
+     
+      <ng-template #modalClima let-modal>
+        <div class="main-content">
+          <div class="container-fluid">
+            <div class="modal-header">
+              <h4 class="title" *ngIf="climaSeleccionado === undefined">
+                Agregar clima
+              </h4>
+              <h4 class="title" *ngIf="climaSeleccionado != undefined">
+                Editar clima
+              </h4>
+              <button
+                type="button"
+                class="close"
+                aria-label="Close"
+                (click)="cerrarModal()"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form [formGroup]="climaForm">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label>Clima</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        formControlName="nombre"
+                      />
+                      <span
+                        class="text-danger"
+                        *ngIf="
+                          TipoFormularioForm.get('nombre')?.hasError('required') &&
+                          TipoFormularioForm.get('nombre')?.touched
+                        "
+                      >
+                        El clima <strong>es requerido.</strong>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-primary btn-fill"
+                (click)="cerrarModal()"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                class="btn btn-success btn-fill"
+                [disabled]="climaForm.invalid"
+                (click)="guardarClima()"
+              >
+                Guardar
+              </button>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+  

@@ -8,19 +8,19 @@ import { Observable } from "rxjs";
 })
 export class UsuariosService {
   constructor(private http: HttpClient) {}
-  getUsuarios(): Observable<Usuario[]> {
+  Get(): Observable<Usuario[]> {
     let options = this.createRequestOptions();
     return this.http.get<Usuario[]>(`${environment.api_URL}/usuario`, {
       headers: options,
     });
   }
-  getUsuario(id: string) {
+  getID(id: string) {
     let options = this.createRequestOptions();
     return this.http.get<Usuario>(`${environment.api_URL}/usuario/${id}`, {
       headers: options,
     });
   }
-  saveUsuario(usuario: Usuario): any {
+  Save(usuario: Usuario): any {
     let options = this.createRequestOptions();
     return this.http.post<Usuario[]>(
       `${environment.api_URL}/usuarios`,
@@ -28,13 +28,13 @@ export class UsuariosService {
       { headers: options }
     );
   }
-  editUsuario(id: number, usuario: any): any {
+  Edit(id: number, usuario: any): any {
     let options = this.createRequestOptions();
     return this.http.put(`${environment.api_URL}/usuario/${id}`, usuario, {
       headers: options,
     });
   }
-  deleteUsuario(id: number): any {
+  Delete(id: number): any {
     let options = this.createRequestOptions();
     return this.http.delete<Usuario>(`${environment.api_URL}/usuario/${id}`, {
       headers: options,

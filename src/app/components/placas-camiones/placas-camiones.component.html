@@ -1,1 +1,132 @@
-<p>placas-camiones works!</p>
+<div class="main-content">
+    <div class="container-fluid">
+      <div class="card">
+        <div class="header">
+          <button
+            class="btn btn-primary btn-fill"
+            (click)="open(modalPlacaCamion)"
+          >
+            <i class="fa fa-plus"></i> Agregar placa de camion
+          </button>
+        </div>
+        <div class="content table-responsive table-full-width">
+          <table class="table table-hover" style="text-align: center">
+            <thead>
+              <tr>
+                <th *ngFor="let encabezado of encabezados">{{ encabezado }}</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="
+                  let placa of placasCamiones
+                    | slice : (page - 1) * pageSize : page * pageSize;
+                  let i = index
+                "
+              >
+                <td>{{ i + 1 }}</td>
+                <td>{{ placa.nombre }}</td>
+                <td>
+                  <button
+                    (click)="open(modalPlacaCamion, placa)"
+                    class="btn btn-success btn-fill"
+                  >
+                    <i class="fa fa-edit"></i>
+                  </button>
+                  <button class="btn btn-danger btn-fill"
+                  (click)="eliminarPlacaCamion(placa.id)">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="placasCamiones.length === 0">
+                <td colspan="10">
+                  <div
+                    class="table-responsive table-full-width"
+                    style="text-align: center"
+                  >
+                    <img src="./assets/img/no-documentos.png" alt="" />
+                    <br />
+                    <label>No se encontraron registros</label>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <ngb-pagination
+            [collectionSize]="placasCamiones.length"
+            [(page)]="page"
+            aria-label="Default pagination"
+          ></ngb-pagination>
+        </div>
+      </div>
+  
+     
+      <ng-template #modalPlacaCamion let-modal>
+        <div class="main-content">
+          <div class="container-fluid">
+            <div class="modal-header">
+              <h4 class="title" *ngIf="placaCamionSeleccionado === undefined">
+                Agregar placa camion
+              </h4>
+              <h4 class="title" *ngIf="placaCamionSeleccionado != undefined">
+                Editar placa camion
+              </h4>
+              <button
+                type="button"
+                class="close"
+                aria-label="Close"
+                (click)="cerrarModal()"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form [formGroup]="placasCamionesForm">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label>Placa camion</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        formControlName="nombre"
+                      />
+                      <span
+                        class="text-danger"
+                        *ngIf="
+                        placasCamionesForm.get('nombre')?.hasError('required') &&
+                        placasCamionesForm.get('nombre')?.touched
+                        "
+                      >
+                        La placa del camion <strong>es requerida.</strong>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-primary btn-fill"
+                (click)="cerrarModal()"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                class="btn btn-success btn-fill"
+                [disabled]="placasCamionesForm.invalid"
+                (click)="guardarPlacaCamion()"
+              >
+                Guardar
+              </button>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+  

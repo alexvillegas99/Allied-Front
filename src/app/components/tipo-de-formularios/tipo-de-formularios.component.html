@@ -1,0 +1,141 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="card">
+      <div class="header">
+        <button
+          class="btn btn-primary btn-fill"
+          (click)="open(modalTipoFormulario)"
+        >
+          <i class="fa fa-plus"></i> Agregar tipo de formulario
+        </button>
+      </div>
+      <div class="content table-responsive table-full-width">
+        <table class="table table-hover" style="text-align: center">
+          <thead>
+            <tr>
+              <th *ngFor="let encabezado of encabezados">{{ encabezado }}</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="
+                let tipoFormulario of tipoFormularios
+                  | slice : (page - 1) * pageSize : page * pageSize;
+                let i = index
+              "
+            >
+              <td>{{ i + 1 }}</td>
+              <td>{{ tipoFormulario.tipo }}</td>
+              <td>
+                <button
+                  (click)="open(modalTipoFormulario, tipoFormulario)"
+                  class="btn btn-success btn-fill"
+                >
+                  <i class="fa fa-edit"></i>
+                </button>
+                <button
+                *ngIf="tipoFormulario.estado"
+                (click)="cambiarEstado(tipoFormulario.id, tipoFormulario.estado)"
+                class="btn btn-primary btn-fill"
+              >
+                <i class="fa fa-check"></i>
+              </button>
+              <button
+                *ngIf="!tipoFormulario.estado"
+                (click)="cambiarEstado(tipoFormulario.id, tipoFormulario.estado)"
+                class="btn btn-danger btn-fill"
+              >
+                <i class="fa fa-ban"></i>
+              </button>
+              </td>
+            </tr>
+            <tr *ngIf="tipoFormularios.length === 0">
+              <td colspan="10">
+                <div
+                  class="table-responsive table-full-width"
+                  style="text-align: center"
+                >
+                  <img src="assets/img/no-documentos.png" alt="" />
+                  <br />
+                  <label>No se encontraron registros</label>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <ngb-pagination
+          [collectionSize]="tipoFormularios.length"
+          [(page)]="page"
+          aria-label="Default pagination"
+        ></ngb-pagination>
+      </div>
+    </div>
+
+    <!-- Agregar usuario -->
+    <ng-template #modalTipoFormulario let-modal>
+      <div class="main-content">
+        <div class="container-fluid">
+          <div class="modal-header">
+            <h4 class="title" *ngIf="tipoFormularioSeleccionado === undefined">
+              Agregar tipo formulario
+            </h4>
+            <h4 class="title" *ngIf="tipoFormularioSeleccionado != undefined">
+              Editar tipo formulario
+            </h4>
+            <button
+              type="button"
+              class="close"
+              aria-label="Close"
+              (click)="cerrarModal()"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="TipoFormularioForm">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label>Tipo de formulario</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      formControlName="tipo"
+                    />
+                    <span
+                      class="text-danger"
+                      *ngIf="
+                        TipoFormularioForm.get('tipo')?.hasError('required') &&
+                        TipoFormularioForm.get('tipo')?.touched
+                      "
+                    >
+                      El tipo de formulario <strong>es requerido.</strong>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-primary btn-fill"
+              (click)="cerrarModal()"
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              class="btn btn-success btn-fill"
+              [disabled]="TipoFormularioForm.invalid"
+              (click)="guardarTipoFormulario()"
+            >
+              Guardar
+            </button>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</div>

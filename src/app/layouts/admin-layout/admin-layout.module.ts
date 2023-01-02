@@ -14,6 +14,7 @@ import { UsuariosComponent } from "app/usuarios/usuarios.component";
 import { UserComponent } from "app/user/user.component";
 import { ConfiguracionComponent } from "app/configuracion/configuracion.component";
 import { ComponentsModule } from "app/components/components.module";
+import { FormulariosComponent } from "app/formularios/formularios.component";
 
 @NgModule({
   imports: [
@@ -30,7 +31,8 @@ import { ComponentsModule } from "app/components/components.module";
     ReportesComponent,
     UsuariosComponent,
     UserComponent,
-    ConfiguracionComponent  
+    ConfiguracionComponent,
+    FormulariosComponent
   ],
   
 })

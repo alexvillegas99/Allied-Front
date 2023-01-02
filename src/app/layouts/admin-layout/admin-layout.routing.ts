@@ -5,10 +5,14 @@ import { ReportesComponent } from "app/reportes/reportes.component";
 import { UsuariosComponent } from "app/usuarios/usuarios.component";
 import { UserComponent } from "app/user/user.component";
 import { ConfiguracionComponent } from "app/configuracion/configuracion.component";
+
+import { FormulariosComponent } from "app/formularios/formularios.component";
 export const AdminLayoutRoutes: Routes = [
   { path: "dashboard", component: HomeComponent },
   { path: "usuarios", component: UsuariosComponent },
   { path: "usuario", component: UserComponent },
   { path: "configuracion", component: ConfiguracionComponent },
   { path: "reportes", component: ReportesComponent },
+  { path: "formularios", component: FormulariosComponent },
+  
 ];

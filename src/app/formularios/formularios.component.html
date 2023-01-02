@@ -1,0 +1,133 @@
+<div class="main-content">
+  <div class="container-fluid">
+   <div class="card card-titulo">
+    <div class="card-body">
+      <input type="text" class="input-titulo input form-control" placeholder="Formulario sin título" [(ngModel)]="nuevoFormulario.titulo">
+      <input type="text" class="input-descripcion input form-control" placeholder="Descripción del formulario" [(ngModel)]="nuevoFormulario.descripcion">
+      <div class="opciones-titulo">
+        <div class="row">
+          <div class="col-md-4">
+            <label>Tipo de formulario</label>
+            <select class="form-select" aria-label="Default select example" [(ngModel)]="nuevoFormulario.tipo_formulario">
+              <option selected>Seleccione...</option>
+              <option>Abierto</option>
+              <option>Cerrado</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label>Proceso</label>
+            <select class="form-select" aria-label="Default select example" [(ngModel)]="nuevoFormulario.proceso">
+              <option selected>Seleccione...</option>
+              <option>Mantenimiento</option>
+              <option>Regado</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label>Formulario referenciado</label>
+            <select class="form-select" aria-label="Default select example">
+              <option selected>Seleccione...</option>
+              <option>F001</option>
+              <option>F002</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="agregar-grupo">
+        <div class="row">
+          <div class="col-md-4">
+            <label>Grupo de preguntas</label>
+            <select class="form-select" aria-label="Default select example" [(ngModel)]="grupoPregunta" >
+              <option selected>Seleccione...</option>
+              <option>LUGAR DE TRABAJO</option>
+              <option>PROCEDIMIENTO</option>
+              <option>EQUIPOS</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <br />
+            <button class="btn btn-primary" (click)="agregarGrupo()">Agregar grupo</button>
+          </div>
+        </div>
+    </div>
+   </div>
+  </div>
+  <div class="card card-grupos" *ngFor="let grupo of nuevoFormulario.grupos_preguntas; let indexG=index">
+    <div class="card-title">
+      <div class="row">
+        <div class="col-md-11">
+          {{grupo.titulo}}<br>
+        </div>
+        <div class="col-md-1">
+          <button class="btn btn-danger" (click)="eliminarGrupoPreguntas(indexG)">
+            <i class="fa fa-trash"></i>
+          </button>
+        </div>
+      </div>
+     
+        <button class="btn btn-primary" (click)="agregarPregunta(indexG)" >
+          Agregar pregunta
+        </button>
+      
+    </div>
+
+    <div class="card-body">
+        <div class="card card-preguntas" *ngFor="let pregunta of grupo.preguntas; let indexP =index">
+
+          <div class="card-title">
+            <div class="row">
+              <div class="col-md-6">
+                <br>
+                <input type="text" class="input input-group input-pregunta" [(ngModel)]="pregunta.titulo" placeholder="Pregunta sin título">
+              </div>
+              <div class="col-md-5" style="margin-top: 6px;">
+                <label>Tipo de pregunta</label>
+                <select
+                  class="form-select"
+                  aria-label="Default select example"
+                  [(ngModel)]="pregunta.tipo_pregunta"
+                >
+                  <option selected>Seleccione...</option>
+                  <option>Respuesta corta</option>
+                  <option>Respuesta larga</option>
+                  <option>Varias opciones</option>
+                  <option>Casilla</option>
+                  <option>Desplegable</option>
+                  <option>Escala lineal</option>
+                </select>
+              </div>
+              <div class="col-md-1">
+                
+                <button class="btn btn-danger"(click)="eliminarPregunta(indexG,indexP)">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+
+            <label class="respuesta-corta" *ngIf="pregunta.tipo_pregunta==='Respuesta corta'"> Respuesta corta</label>
+            <label class="respuesta-larga" *ngIf="pregunta.tipo_pregunta==='Respuesta larga'"> Respuesta larga</label> 
+            
+
+          </div>
+          <div class="card-footer">
+            <label>Obligatorio  </label>
+            <div
+              class="btn-group btn-group-toggle btn-obligatorio"
+              ngbRadioGroup
+              name="radioBasic"
+              [(ngModel)]="pregunta.obligatoria"
+            >
+              <label ngbButtonLabel class="btn-success">
+                <input ngbButton type="radio" [value]="true" /> Si
+              </label>
+              <label ngbButtonLabel class="btn-danger">
+                <input ngbButton type="radio" [value]="false" />
+                No
+              </label>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>

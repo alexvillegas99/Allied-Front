@@ -1,6 +1,5 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { Usuario } from "app/models/usuario.interface";
 import { UsuariosService } from "app/services/usuarios.service";
 import {
   NgbModal,
@@ -54,7 +53,7 @@ export class UserComponent implements OnInit {
 
   getPerfil() {
     let userId = localStorage.getItem("userId");
-    this._usuarioService.getUsuario(userId).subscribe((result) => {
+    this._usuarioService.getID(userId).subscribe((result) => {
       this.perfilForm.controls.id_rol.setValue(result.rol);
       this.perfilForm.controls.user.setValue(result.user);
     });
@@ -76,7 +75,7 @@ export class UserComponent implements OnInit {
     };
 
     this._usuarioService
-      .editUsuario(Number(localStorage.getItem("userId")), UsuarioGuardar)
+      .Edit(Number(localStorage.getItem("userId")), UsuarioGuardar)
       .subscribe((result) => {
         this.getPerfil();
       localStorage.setItem('usuario', String(user));

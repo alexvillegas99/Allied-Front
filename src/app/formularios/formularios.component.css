@@ -1,0 +1,57 @@
+.main-content{
+    background-color: aliceblue;
+ }
+label{
+    color: black;
+}
+.input::placeholder{
+    color: #000;
+}
+
+.input-titulo{
+    font-size: 35px;
+    border: 0px;
+    /* border-bottom: 2px royalblue solid ; */
+}
+.input-descripcion{
+    border: 0px;
+    font-size: 15px;
+   /*  border-bottom: 2px royalblue solid ; */
+}
+.card-titulo{
+    border-top: 5px rgb(0, 39, 165) solid;
+    
+}
+
+
+.card-title{
+    font-size: 35px;
+}
+.card{
+    padding: 5px 5px 5px 15px;
+}
+.card-grupos{
+    border-left: 5px rgb(0, 39, 165) solid;
+}
+.card-preguntas{
+    border-left: 5px rgb(0, 204, 255) solid;
+}
+.input-pregunta{
+    border: 0px;
+    font-size: 25px;
+    border-bottom: 2px rgb(0, 204, 255) solid;
+}
+.card-footer{
+    
+    text-align: right;
+    background-color: white;
+}
+.btn-obligatorio{
+    margin-left: 15px;
+}
+.respuesta-corta{
+    border-bottom: 1px black solid !important;
+}
+.respuesta-larga{
+    border-bottom: 1px black solid !important;
+}

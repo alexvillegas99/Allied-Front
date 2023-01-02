@@ -42,7 +42,7 @@ registerLocaleData(localeEs,'es');
   declarations: [
     AppComponent,
     AdminLayoutComponent,
-    LoginComponent
+    LoginComponent,
   ],schemas: [
     CUSTOM_ELEMENTS_SCHEMA
   ],

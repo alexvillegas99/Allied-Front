@@ -64,7 +64,7 @@ export class UsuariosComponent implements OnInit {
     });
   }
   getUsuarios() {
-    this._usuariosService.getUsuarios().subscribe((result) => {
+    this._usuariosService.Get().subscribe((result) => {
       this.usuariosFiltrados = this.usuarios = result;
     });
   }
@@ -115,7 +115,7 @@ export class UsuariosComponent implements OnInit {
       confirmButtonText: "Aceptar",
     }).then((result) => {
       if (result.isConfirmed) {
-        this._usuariosService.editUsuario(id, modificar).subscribe(
+        this._usuariosService.Edit(id, modificar).subscribe(
           (result) => {
             this.getUsuarios();
             //Mostrando alerta de eliminación
@@ -134,7 +134,7 @@ export class UsuariosComponent implements OnInit {
   }
   saveUsuario() {
     if (this.usuarioSeleccionado === undefined) {
-      this._usuariosService.saveUsuario(this.usuarioForm.value).subscribe(
+      this._usuariosService.Save(this.usuarioForm.value).subscribe(
         (result) => {
           this.getUsuarios();
           if (result.message === "Ok") {
@@ -152,7 +152,7 @@ export class UsuariosComponent implements OnInit {
       );
     } else {
       this._usuariosService
-        .editUsuario(this.usuarioSeleccionado.id, this.usuarioForm.value)
+        .Edit(this.usuarioSeleccionado.id, this.usuarioForm.value)
         .subscribe(
           (result) => {
             this.getUsuarios();
